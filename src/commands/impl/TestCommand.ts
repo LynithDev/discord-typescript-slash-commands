@@ -3,7 +3,7 @@ import { CommandContext } from '../CommandContext';
 
 class TestCommand extends Command {
     constructor() {
-        super('echo', 'Repeats what you say');
+        super('sayok', 'Says Ok');
     }
 
     // eslint-disable-next-line class-methods-use-this
