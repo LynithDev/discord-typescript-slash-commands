@@ -5,7 +5,6 @@
   "main": "dist/bot.js",
   "scripts": {
     "start": "node .",
-    "dev": "concurrently \"tsc -w --pretty \" \"node .\"",
     "watch": "tsc -w --pretty"
   },
   "type": "commonjs",
@@ -20,7 +19,6 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
-    "concurrently": "^6.2.1",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.0",
