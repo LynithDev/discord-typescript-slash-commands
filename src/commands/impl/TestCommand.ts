@@ -1,21 +1,18 @@
-import Command from "../Command";
-import { CommandContext } from "../CommandContext";
-import { SlashCommandBuilder } from "@discordjs/builders";
+import Command from '../Command';
+import { CommandContext } from '../CommandContext';
 
 class TestCommand extends Command {
-
     constructor() {
-        super("echo", "Repeats what you say")
+        super('echo', 'Repeats what you say');
     }
 
+    // eslint-disable-next-line class-methods-use-this
     execute(ctx: CommandContext) {
-        console.log("execute")
         ctx.getEvent.reply({
-            content: "Ok",
-            ephemeral: true
+            content: 'Ok',
+            ephemeral: true,
         });
     }
-    
 }
 
 export default new TestCommand();
