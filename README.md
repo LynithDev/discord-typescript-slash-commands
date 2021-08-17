@@ -1,5 +1,5 @@
 # discord-typescript-slash-commands
-A Discord.JS TypeScript Slash Command Handler.
+A Discord.JS TypeScript Slash Command Handler based on Classes.
 
 ## Making a Discord Bot and Slash Commands Application
 1. Visit https://discord.com/developers/applications
