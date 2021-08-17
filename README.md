@@ -1,6 +1,16 @@
 # discord-typescript-slash-commands
 A Discord.JS TypeScript Slash Command Handler.
 
+## Making a Discord Bot and Slash Commands Application
+1. Visit https://discord.com/developers/applications
+2. Create a new application
+3. On the left side of the page, there is a button named `Bot`. Click that and press `Create a new bot`
+4. Configure it to your liking and make sure to enable all the intents
+5. On the left side of the page, there is a button named `OAuth`. Click that and scroll down to `scopes`
+6. Make sure to check the boxes: `bot` and `applications.commands`
+7. Then copy the OAuth URL (below the checkboxes) and paste it into your browser
+8. Invite / Add the applications to your desired server 
+
 ## Setting up the project
 1. `git clone` the repository
 2. Open the folder in your desired editor (I personally use Visual Studio Code)
