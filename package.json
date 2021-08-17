@@ -1,0 +1,29 @@
+{
+  "name": "randombot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/bot.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "concurrently \"tsc -w --pretty \" \"node .\"",
+    "watch": "tsc -w --pretty"
+  },
+  "type": "commonjs",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.22.0",
+    "discord.js": "^13.1.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.29.2",
+    "@typescript-eslint/parser": "^4.29.2",
+    "concurrently": "^6.2.1",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.0",
+    "typescript": "^4.3.5"
+  }
+}
