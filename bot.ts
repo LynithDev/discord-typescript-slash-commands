@@ -1,5 +1,5 @@
 import { Client, Intents, Interaction } from 'discord.js';
-import * as Handler from 'src/commands/Handler';
+import * as Handler from './src/commands/Handler';
 import config from './config.json';
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
