@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 /* eslint-disable no-async-promise-executor */
 import { Client, CommandInteraction, Interaction } from 'discord.js';
 import fs from 'fs';
@@ -7,7 +8,7 @@ import { Routes } from 'discord-api-types/v9';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import * as bot from '../../bot';
 import config from '../../config.json';
-import Command from './Command';
+import Command, { CommandOptionType } from './Command';
 import { CommandContext } from './CommandContext';
 
 const files = fs.readdirSync(path.join(__dirname, 'impl'));
@@ -59,6 +60,78 @@ export const updateCommands = () => new Promise(async (resolve, reject) => {
             const data = new SlashCommandBuilder()
                 .setName(cmd.name)
                 .setDescription(cmd.description);
+
+            cmd.addOptions().forEach((option) => {
+                if (option.required == (undefined || null)) option.required = false;
+                if (option.choices == (undefined || null)) option.choices = [];
+
+                const choices = [];
+
+                switch (option.type) {
+                    default:
+                        break;
+                    case CommandOptionType.BOOLEAN:
+                        data.addBooleanOption((opt) => opt.setName(option.name)
+                            .setDescription(option.description)
+                            .setRequired(option.required));
+                        break;
+                    case CommandOptionType.CHANNEL:
+                        data.addChannelOption((opt) => opt.setName(option.name)
+                            .setDescription(option.description)
+                            .setRequired(option.required));
+                        break;
+                    case CommandOptionType.INTEGER:
+
+                        option.choices.forEach((opt) => {
+                            choices.push([opt.name, opt.value]);
+                        });
+
+                        data.addIntegerOption((opt) => opt.setName(option.name)
+                            .setDescription(option.description)
+                            .setRequired(option.required)
+                            .addChoices(choices));
+                        break;
+                    case CommandOptionType.MENTIONABLE:
+                        data.addMentionableOption((opt) => opt.setName(option.name)
+                            .setDescription(option.description)
+                            .setRequired(option.required));
+                        break;
+                    case CommandOptionType.ROLE:
+                        data.addRoleOption((opt) => opt.setName(option.name)
+                            .setDescription(option.description)
+                            .setRequired(option.required));
+                        break;
+                    case CommandOptionType.STRING:
+
+                        option.choices.forEach((opt) => {
+                            choices.push([opt.name, opt.value]);
+                        });
+
+                        data.addStringOption((opt) => opt.setName(option.name)
+                            .setDescription(option.description)
+                            .setRequired(option.required)
+                            .addChoices(choices));
+                        break;
+                    case CommandOptionType.USER:
+                        data.addUserOption((opt) => opt.setName(option.name)
+                            .setDescription(option.description)
+                            .setRequired(option.required));
+                        break;
+                }
+            });
+
+            // cmd.addOptions().forEach((option) => {
+            //     switch (option.type) {
+            //         default:
+            //             return;
+            //         case CommandOptionType.BOOLEAN:
+            //             data.addBooleanOption({
+            //                 name: option.name,
+            //                 description: option.description,
+            //                 required: option.required,
+            //             });
+            //     }
+            // });
 
             scData.push(data.toJSON());
         });

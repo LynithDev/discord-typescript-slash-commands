@@ -1,4 +1,5 @@
-import Command from '../Command';
+/* eslint-disable class-methods-use-this */
+import Command, { CommandOption, CommandOptionType } from '../Command';
 import { CommandContext } from '../CommandContext';
 
 class TestCommand extends Command {
@@ -6,12 +7,40 @@ class TestCommand extends Command {
         super('sayok', 'Says Ok');
     }
 
-    // eslint-disable-next-line class-methods-use-this
     execute(ctx: CommandContext) {
+        console.log(ctx.getEvent.options);
+
         ctx.getEvent.reply({
             content: 'Ok',
             ephemeral: true,
         });
+    }
+
+    addOptions() {
+        const options: CommandOption[] = [
+            {
+                type: CommandOptionType.STRING,
+                name: 'stringoption',
+                description: 'This is a string option. It is required',
+                required: true,
+            },
+            {
+                type: CommandOptionType.STRING,
+                name: 'stringoptiontwo',
+                description: 'This is another string option. It is not required and has choices',
+                choices: [
+                    {
+                        name: 'choice one',
+                        value: 'Here is the value',
+                    },
+                    {
+                        name: 'choice two',
+                        value: 'Here is another value',
+                    },
+                ],
+            },
+        ];
+        return options;
     }
 }
 

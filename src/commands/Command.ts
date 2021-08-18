@@ -1,5 +1,30 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-useless-constructor */
 import { CommandContext } from './CommandContext';
+
+export type CommandOptionChoice = {
+    name: string,
+    value: string | number
+}
+
+// eslint-disable-next-line no-shadow
+export enum CommandOptionType {
+    BOOLEAN,
+    CHANNEL,
+    INTEGER,
+    MENTIONABLE,
+    ROLE,
+    STRING,
+    USER
+}
+
+export type CommandOption = {
+    type: CommandOptionType,
+    name: string,
+    description: string,
+    required?: boolean,
+    choices?: CommandOptionChoice[]
+}
 
 export default abstract class Command {
     // eslint-disable-next-line no-empty-function
@@ -7,11 +32,16 @@ export default abstract class Command {
 
     abstract execute(ctx: CommandContext)
 
-    static addOptions() {
+    addOptions() {
+        const options: CommandOption[] = [];
+        return options;
+    }
+
+    addSubcommands() {
         return [];
     }
 
-    static addSubcommands() {
+    addSubcommandGroups() {
         return [];
     }
 }
