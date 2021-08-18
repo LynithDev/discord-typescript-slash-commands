@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import Command, { CommandOption, CommandOptionType } from '../Command';
+import Command, { CommandOption, CommandOptionType, SubCommandOption } from '../Command';
 import { CommandContext } from '../CommandContext';
 
 class TestCommand extends Command {
@@ -36,6 +36,23 @@ class TestCommand extends Command {
                     {
                         name: 'choice two',
                         value: 'Here is another value',
+                    },
+                ],
+            },
+        ];
+        return options;
+    }
+
+    addSubcommands() {
+        const options: SubCommandOption[] = [
+            {
+                name: 'test',
+                description: 'ok',
+                options: [
+                    {
+                        type: CommandOptionType.STRING,
+                        name: 'stringoptiona',
+                        description: 'This is a string option. It is required',
                     },
                 ],
             },

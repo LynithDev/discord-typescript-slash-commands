@@ -8,7 +8,7 @@ import { Routes } from 'discord-api-types/v9';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import * as bot from '../../bot';
 import config from '../../config.json';
-import Command, { CommandOptionType } from './Command';
+import Command, { CommandOption, CommandOptionType } from './Command';
 import { CommandContext } from './CommandContext';
 
 const files = fs.readdirSync(path.join(__dirname, 'impl'));
@@ -47,6 +47,65 @@ export const onSlashCommand = async (client: Client, interaction: Interaction) =
     command.execute(ctx);
 };
 
+export const addOptions = (data: SlashCommandBuilder, option: CommandOption) => {
+    if (option.required == (undefined || null)) option.required = false;
+    if (option.choices == (undefined || null)) option.choices = [];
+
+    const choices = [];
+
+    switch (option.type) {
+        default:
+            break;
+        case CommandOptionType.BOOLEAN:
+            data.addBooleanOption((opt) => opt.setName(option.name)
+                .setDescription(option.description)
+                .setRequired(option.required));
+            break;
+        case CommandOptionType.CHANNEL:
+            data.addChannelOption((opt) => opt.setName(option.name)
+                .setDescription(option.description)
+                .setRequired(option.required));
+            break;
+        case CommandOptionType.INTEGER:
+
+            option.choices.forEach((opt) => {
+                choices.push([opt.name, opt.value]);
+            });
+
+            data.addIntegerOption((opt) => opt.setName(option.name)
+                .setDescription(option.description)
+                .setRequired(option.required)
+                .addChoices(choices));
+            break;
+        case CommandOptionType.MENTIONABLE:
+            data.addMentionableOption((opt) => opt.setName(option.name)
+                .setDescription(option.description)
+                .setRequired(option.required));
+            break;
+        case CommandOptionType.ROLE:
+            data.addRoleOption((opt) => opt.setName(option.name)
+                .setDescription(option.description)
+                .setRequired(option.required));
+            break;
+        case CommandOptionType.STRING:
+
+            option.choices.forEach((opt) => {
+                choices.push([opt.name, opt.value]);
+            });
+
+            data.addStringOption((opt) => opt.setName(option.name)
+                .setDescription(option.description)
+                .setRequired(option.required)
+                .addChoices(choices));
+            break;
+        case CommandOptionType.USER:
+            data.addUserOption((opt) => opt.setName(option.name)
+                .setDescription(option.description)
+                .setRequired(option.required));
+            break;
+    }
+};
+
 export const updateCommands = () => new Promise(async (resolve, reject) => {
     const rest = new REST({ version: '9' }).setToken(config.token);
     try {
@@ -61,77 +120,27 @@ export const updateCommands = () => new Promise(async (resolve, reject) => {
                 .setName(cmd.name)
                 .setDescription(cmd.description);
 
+            if (cmd.addOptions().length != 0 && cmd.addSubcommands().length != 0) {
+                throw new Error(`Command '${cmd.name}' cannot have subcommands and options together!`);
+            }
+
             cmd.addOptions().forEach((option) => {
-                if (option.required == (undefined || null)) option.required = false;
-                if (option.choices == (undefined || null)) option.choices = [];
+                console.log('add options');
+                console.log(option);
 
-                const choices = [];
-
-                switch (option.type) {
-                    default:
-                        break;
-                    case CommandOptionType.BOOLEAN:
-                        data.addBooleanOption((opt) => opt.setName(option.name)
-                            .setDescription(option.description)
-                            .setRequired(option.required));
-                        break;
-                    case CommandOptionType.CHANNEL:
-                        data.addChannelOption((opt) => opt.setName(option.name)
-                            .setDescription(option.description)
-                            .setRequired(option.required));
-                        break;
-                    case CommandOptionType.INTEGER:
-
-                        option.choices.forEach((opt) => {
-                            choices.push([opt.name, opt.value]);
-                        });
-
-                        data.addIntegerOption((opt) => opt.setName(option.name)
-                            .setDescription(option.description)
-                            .setRequired(option.required)
-                            .addChoices(choices));
-                        break;
-                    case CommandOptionType.MENTIONABLE:
-                        data.addMentionableOption((opt) => opt.setName(option.name)
-                            .setDescription(option.description)
-                            .setRequired(option.required));
-                        break;
-                    case CommandOptionType.ROLE:
-                        data.addRoleOption((opt) => opt.setName(option.name)
-                            .setDescription(option.description)
-                            .setRequired(option.required));
-                        break;
-                    case CommandOptionType.STRING:
-
-                        option.choices.forEach((opt) => {
-                            choices.push([opt.name, opt.value]);
-                        });
-
-                        data.addStringOption((opt) => opt.setName(option.name)
-                            .setDescription(option.description)
-                            .setRequired(option.required)
-                            .addChoices(choices));
-                        break;
-                    case CommandOptionType.USER:
-                        data.addUserOption((opt) => opt.setName(option.name)
-                            .setDescription(option.description)
-                            .setRequired(option.required));
-                        break;
-                }
+                addOptions(data, option);
             });
 
-            // cmd.addOptions().forEach((option) => {
-            //     switch (option.type) {
-            //         default:
-            //             return;
-            //         case CommandOptionType.BOOLEAN:
-            //             data.addBooleanOption({
-            //                 name: option.name,
-            //                 description: option.description,
-            //                 required: option.required,
-            //             });
-            //     }
-            // });
+            cmd.addSubcommands().forEach((subcommand) => {
+                console.log('ad subcomadn');
+                console.log(subcommand);
+                if (subcommand.options == (undefined || null)) subcommand.options = [];
+
+                data.addSubcommand((opt) => opt.setName(subcommand.name).setDescription(subcommand.description));
+                subcommand.options.forEach((option) => {
+                    addOptions(data, option);
+                });
+            });
 
             scData.push(data.toJSON());
         });

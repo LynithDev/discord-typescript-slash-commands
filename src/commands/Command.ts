@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-useless-constructor */
 import { CommandContext } from './CommandContext';
@@ -7,7 +8,6 @@ export type CommandOptionChoice = {
     value: string | number
 }
 
-// eslint-disable-next-line no-shadow
 export enum CommandOptionType {
     BOOLEAN,
     CHANNEL,
@@ -15,7 +15,7 @@ export enum CommandOptionType {
     MENTIONABLE,
     ROLE,
     STRING,
-    USER
+    USER,
 }
 
 export type CommandOption = {
@@ -24,6 +24,12 @@ export type CommandOption = {
     description: string,
     required?: boolean,
     choices?: CommandOptionChoice[]
+}
+
+export type SubCommandOption = {
+    name: string,
+    description: string,
+    options?: CommandOption[]
 }
 
 export default abstract class Command {
@@ -38,10 +44,11 @@ export default abstract class Command {
     }
 
     addSubcommands() {
-        return [];
+        const options: SubCommandOption[] = [];
+        return options;
     }
 
     addSubcommandGroups() {
-        return [];
+
     }
 }
